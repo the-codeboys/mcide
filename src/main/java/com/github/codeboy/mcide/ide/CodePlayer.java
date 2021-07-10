@@ -55,7 +55,6 @@ public class CodePlayer {
     public void save() {
         Mcide plugin = Mcide.getPlugin(Mcide.class);
         String json = Mcide.gson().toJson(this);
-        System.out.println(json);
         try {
             List<String> lines = Arrays.asList(json.split("\n"));
             Path path = Paths.get(plugin.getProjectsPath() + playerId);
