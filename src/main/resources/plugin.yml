@@ -1,0 +1,10 @@
+name: Mcide
+version: ${project.version}
+main: com.github.codeboy.mcide.Mcide
+authors: [ codeboy ]
+website: https://github.com/the-codeboy
+
+commands:
+  run:
+  ide:
+  create-project:

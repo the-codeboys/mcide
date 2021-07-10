@@ -1,0 +1,45 @@
+package com.github.codeboy.mcide.config;
+
+import org.bukkit.ChatColor;
+
+public class Message {
+
+    public static String createMessage(String template,String... toInsert){
+        for (int i = 0; i < toInsert.length; i++) {
+            template=template.replace("{"+i+"}",toInsert[i]);
+        }
+        return template;
+    }
+
+    // region info
+    @ConfigValue
+    public static String PROJECTS="projects",
+            EXECUTION_START=ChatColor.BLUE+"Running project {0}",
+            RIGHT_CLICK_TO_EDIT=ChatColor.BLUE+"Right click to edit. Move to cancel",
+            BACK=ChatColor.BLUE+"back",
+            RUN=ChatColor.GREEN+"run",
+            SELECT_LANGUAGE="select a language",
+            CREATE_FILE=ChatColor.GREEN+"create file",
+            DELETE_FILE=ChatColor.RED+"delete file",
+            EDIT_CANCELLED=ChatColor.DARK_RED+"Cancelled editing file {0}";
+    // endregion
+
+
+    //region error
+    @ConfigValue
+    public static String CMD_PLAYER_ONLY= ChatColor.RED + "Only players can use this command",
+    LANGUAGE_AND_NAME_REQUIRED=ChatColor.RED+"You need to specify a language and a name for the project",
+    NAME_REQUIRED=ChatColor.RED+"You need to specify a name!",
+    RUN_PROJECT_ERROR_OUTPUT=ChatColor.RED+"Your project \"{0}\" had an error:",
+    NOT_PROJECT_OWNER=ChatColor.RED+"You are not the owner of this project"
+            ;
+    //endregion
+
+
+    //region success
+    @ConfigValue
+    public static String PROJECT_CREATE_SUCCESS= ChatColor.GREEN + "Project created successfully",
+    RUN_PROJECT_SUCCESS=ChatColor.GREEN+"Ran project \"{0}\" successfully. Here is your output:",
+    EDIT_SUCCESS =ChatColor.GREEN + "Edited file {0} successfully";
+    //endregion
+}
