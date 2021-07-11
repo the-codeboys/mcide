@@ -25,7 +25,7 @@ public final class Mcide extends JavaPlugin {
         return gson==null?(gson=new Gson()):gson;
     }
 
-    private final Piston piston = Piston.getDefaultApi();
+    private Piston piston;
 
     public static Piston getPiston() {
         return getPlugin(Mcide.class).piston;
@@ -36,6 +36,10 @@ public final class Mcide extends JavaPlugin {
         // Plugin startup logic
 
         readConfigs();
+
+        piston=Piston.getInstance(Config.pistonEndPoint);
+        piston.setApiKey(Config.pistonApiKey);
+
         getCommand("run").setExecutor(new RunCommand());
         getCommand("ide").setExecutor(new IdeCommand());
         getCommand("create-project").setExecutor(new CreateProject());
@@ -64,7 +68,7 @@ public final class Mcide extends JavaPlugin {
 
             String code = String.join("", arguments);
 
-            ExecutionResult result = Piston.getDefaultApi().execute(language, code);
+            ExecutionResult result = Mcide.getPiston().execute(language, code);
             ExecutionResult.ExecutionOutput output = result.getOutput();
             sender.sendMessage(output.getOutput());
             System.out.println(result);

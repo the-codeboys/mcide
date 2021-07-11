@@ -11,8 +11,8 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 
-public class MultiPageGui extends Gui{
-    private int sizePerPage;
+public class MultiPageGui extends Gui{// TODO: Finish MultiPageGui
+    private final int sizePerPage;
 
     private final ArrayList<Inventory>pages=new ArrayList<>();
 

@@ -47,7 +47,8 @@ public class MCCodeFile {
 
     public void setProject(CodeProject project) {
         if (this.project != null)
-            throw new IllegalStateException("PRoject already set");
+            return;
+//            throw new IllegalStateException("Project already set");
         this.project = project;
     }
 

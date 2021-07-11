@@ -23,7 +23,7 @@ public class ProjectMenu extends Gui {
         }
 
         addItem(createItem(Material.ARROW, Message.BACK),45,p->new ProjectSelector(p).open(p));
-        addItem(createItem(Material.GREEN_SHULKER_BOX, Message.RUN),46, project::run);
+        addItem(createItem(Material.BANNER, Message.RUN),46, project::run);
         addItem(createItem(Material.WORKBENCH, Message.CREATE_FILE),47, project::addFile);
         addItem(createItem(Material.BARRIER, Message.DELETE_FILE),48, project::removeFile);
     }

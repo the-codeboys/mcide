@@ -34,7 +34,15 @@ public class CodePlayer {
 
     private static CodePlayer createCodePlayer(UUID id) {
         File saveFile = new File(Mcide.getPlugin(Mcide.class).getProjectsPath() + id);
-        return saveFile.exists() ? fromFile(saveFile) : new CodePlayer(id);
+        CodePlayer player= saveFile.exists() ? fromFile(saveFile) : new CodePlayer(id);
+        player.init();
+        return player;
+    }
+
+    private void init(){
+        for (CodeProject project:getProjects()){
+            project.init();
+        }
     }
 
     private static CodePlayer fromFile(File file) {

@@ -14,11 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -43,10 +41,13 @@ public class CodeProject {
         if(MCCodeFiles.length==0){
             this.MCCodeFiles.add(new MCCodeFile());
         }
-        for (MCCodeFile file:getMCCodeFiles())
-            file.setProject(this);
         this.ownerId = ownerId;
         getOwner().getProjects().add(this);
+    }
+
+    public void init(){
+        for (MCCodeFile file:getMCCodeFiles())
+            file.setProject(this);
     }
 
     //region getter and setter
@@ -138,9 +139,9 @@ public class CodeProject {
         bookMeta.setAuthor(player.getName());
         book.setItemMeta(bookMeta);
 
-        ItemStack oldItem=player.getInventory().getItemInOffHand();
+        ItemStack oldItem=player.getInventory().getItemInHand();
 
-        player.getInventory().setItemInOffHand(book);
+        player.getInventory().setItemInHand(book);
         player.sendMessage(Message.RIGHT_CLICK_TO_EDIT);
         player.closeInventory();
 
@@ -197,7 +198,7 @@ public class CodeProject {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        player.getInventory().setItemInOffHand(oldItem);
+                        player.getInventory().setItemInHand(oldItem);
                         HandlerList.unregisterAll(listener);
                         new ProjectMenu(file.getProject()).open(player);
                     }
