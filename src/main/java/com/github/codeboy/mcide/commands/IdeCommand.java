@@ -1,7 +1,6 @@
 package com.github.codeboy.mcide.commands;
 
 import com.github.codeboy.mcide.config.Message;
-import com.github.codeboy.mcide.ide.CodePlayer;
 import com.github.codeboy.mcide.ide.CodeProject;
 import com.github.codeboy.mcide.ide.gui.ProjectSelector;
 import org.bukkit.command.Command;
@@ -35,11 +34,11 @@ public class IdeCommand implements CommandExecutor {
                         player.sendMessage(Message.LANGUAGE_AND_NAME_REQUIRED);
                         return true;
                     }
-                    List<String> list= new ArrayList<>(Arrays.asList(args));
+                    List<String> list = new ArrayList<>(Arrays.asList(args));
                     list.remove(0);
                     list.remove(0);
-                    String language=args[1],title=String.join(" ",list);
-                    CodeProject project=new CodeProject(language,title,player.getUniqueId());
+                    String language = args[1], title = String.join(" ", list);
+                    CodeProject project = new CodeProject(language, title, player.getUniqueId());
                     project.save();
                     player.sendMessage(Message.PROJECT_CREATE_SUCCESS);
                     break;

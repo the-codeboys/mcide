@@ -21,11 +21,11 @@ import java.util.List;
 public final class Mcide extends JavaPlugin {
 
     private static Gson gson;
-    public static Gson gson(){
-        return gson==null?(gson=new Gson()):gson;
-    }
-
     private Piston piston;
+
+    public static Gson gson() {
+        return gson == null ? (gson = new Gson()) : gson;
+    }
 
     public static Piston getPiston() {
         return getPlugin(Mcide.class).piston;
@@ -37,7 +37,7 @@ public final class Mcide extends JavaPlugin {
 
         readConfigs();
 
-        piston=Piston.getInstance(Config.pistonEndPoint);
+        piston = Piston.getInstance(Config.pistonEndPoint);
         piston.setApiKey(Config.pistonApiKey);
 
         getCommand("run").setExecutor(new RunCommand());
@@ -46,12 +46,12 @@ public final class Mcide extends JavaPlugin {
 
     }
 
-    private void readConfigs(){
-        File configFile=new File(getDataFolder().getPath()+File.separator+"config.yml");
-        ConfigReader.readConfig(Config.class,configFile);
+    private void readConfigs() {
+        File configFile = new File(getDataFolder().getPath() + File.separator + "config.yml");
+        ConfigReader.readConfig(Config.class, configFile);
 
-        File languageFile=new File(getDataFolder().getPath()+File.separator+"languages"+File.separator+Config.language+".yml");
-        ConfigReader.readConfig(Message.class,languageFile);
+        File languageFile = new File(getDataFolder().getPath() + File.separator + "languages" + File.separator + Config.language + ".yml");
+        ConfigReader.readConfig(Message.class, languageFile);
     }
 
     @Override

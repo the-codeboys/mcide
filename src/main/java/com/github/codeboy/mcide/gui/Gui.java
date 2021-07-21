@@ -20,8 +20,8 @@ import java.util.HashMap;
 
 public class Gui implements InventoryHolder, Listener {
 
-    private final Inventory inventory;
     protected final HashMap<Integer, Action> actions = new HashMap<>();
+    private final Inventory inventory;
     private final Plugin plugin;
 
     public Gui(Plugin plugin, int size, String title) {
@@ -63,7 +63,7 @@ public class Gui implements InventoryHolder, Listener {
     }
 
     public void addItem(ItemStack item, Action action) {
-        addItem(item,getInventory().firstEmpty(),action);
+        addItem(item, getInventory().firstEmpty(), action);
     }
 
     public void addItem(ItemStack item, int index, Action action) {

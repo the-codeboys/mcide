@@ -12,18 +12,18 @@ import org.bukkit.entity.Player;
 public class CreateProject implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(Message.CMD_PLAYER_ONLY);
             return true;
         }
-        Player p= (Player) sender;
-        if(args.length==0){
+        Player p = (Player) sender;
+        if (args.length == 0) {
             p.sendMessage(Message.NAME_REQUIRED);
             return true;
         }
-        String name=String.join(" ",args);
-        new LanguageSelector(runtime->{
-            CodeProject project=new CodeProject(runtime.getLanguage(),name,p.getUniqueId());
+        String name = String.join(" ", args);
+        new LanguageSelector(runtime -> {
+            CodeProject project = new CodeProject(runtime.getLanguage(), name, p.getUniqueId());
             project.save();
             p.sendMessage(Message.PROJECT_CREATE_SUCCESS);
             new ProjectMenu(project).open(p);

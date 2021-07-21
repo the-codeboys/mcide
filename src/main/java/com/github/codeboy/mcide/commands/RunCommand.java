@@ -14,15 +14,15 @@ import java.util.List;
 public class RunCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length<2){
-            sender.sendMessage(ChatColor.RED+"requires two arguments: language and code");
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "requires two arguments: language and code");
             return true;
         }
-        List<String> list= new ArrayList<>(Arrays.asList(args));
+        List<String> list = new ArrayList<>(Arrays.asList(args));
         list.remove(0);
-        String language=args[0],code=String.join(" ", list);
-        ExecutionResult result= Mcide.getPiston().execute(language,code);
-        ExecutionResult.ExecutionOutput output= result.getOutput();
+        String language = args[0], code = String.join(" ", list);
+        ExecutionResult result = Mcide.getPiston().execute(language, code);
+        ExecutionResult.ExecutionOutput output = result.getOutput();
         sender.sendMessage(output.getOutput());
         System.out.println(result);
         return true;

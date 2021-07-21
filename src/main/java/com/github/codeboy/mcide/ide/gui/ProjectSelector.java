@@ -13,15 +13,16 @@ public class ProjectSelector extends Gui {
     public ProjectSelector(Player player) {
         this(CodePlayer.getCodePlayer(player));
     }
+
     public ProjectSelector(CodePlayer player) {
         super(Mcide.getPlugin(Mcide.class), 54, Message.PROJECTS);
-        for (CodeProject project:player.getProjects()){
+        for (CodeProject project : player.getProjects()) {
             addProject(project);
         }
     }
 
-    private void addProject(CodeProject project){
-        ItemStack projectItem=createItem(Material.BOOKSHELF, project.getTitle(), project.getLanguage());
+    private void addProject(CodeProject project) {
+        ItemStack projectItem = createItem(Material.BOOKSHELF, project.getTitle(), project.getLanguage());
         addItem(projectItem, project::open);
     }
 }

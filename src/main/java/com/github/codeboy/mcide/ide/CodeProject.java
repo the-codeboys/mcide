@@ -29,24 +29,24 @@ import java.util.UUID;
 
 public class CodeProject {
 
+    private final ArrayList<MCCodeFile> MCCodeFiles;
     private String language;
     private String title;
-    private final ArrayList<MCCodeFile> MCCodeFiles;
     private UUID ownerId;
 
     public CodeProject(String language, String title, UUID ownerId, MCCodeFile... MCCodeFiles) {
         this.language = language;
         this.title = title;
         this.MCCodeFiles = new ArrayList<>(Arrays.asList(MCCodeFiles));
-        if(MCCodeFiles.length==0){
+        if (MCCodeFiles.length == 0) {
             this.MCCodeFiles.add(new MCCodeFile());
         }
         this.ownerId = ownerId;
         getOwner().getProjects().add(this);
     }
 
-    public void init(){
-        for (MCCodeFile file:getMCCodeFiles())
+    public void init() {
+        for (MCCodeFile file : getMCCodeFiles())
             file.setProject(this);
     }
 
@@ -88,58 +88,58 @@ public class CodeProject {
         return runtime.execute(getMCCodeFiles().stream().map(MCCodeFile::toCodeFile).toArray(CodeFile[]::new));
     }
 
-    public void run(Player player){
-        CodeProject project=this;
+    public void run(Player player) {
+        CodeProject project = this;
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.sendMessage(Message.createMessage(Message.EXECUTION_START,getTitle()));
-                ExecutionResult result=project.run();
-                ExecutionResult.ExecutionOutput output= result.getOutput();
-                if(output.getOutput()==null&&output.getOutput().length()==0){
-                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT,getTitle()));
+                player.sendMessage(Message.createMessage(Message.EXECUTION_START, getTitle()));
+                ExecutionResult result = project.run();
+                ExecutionResult.ExecutionOutput output = result.getOutput();
+                if (output.getOutput() == null && output.getOutput().length() == 0) {
+                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT, getTitle()));
                     player.sendMessage(output.getStderr());
-                }else{
-                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_SUCCESS,getTitle()));
+                } else {
+                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_SUCCESS, getTitle()));
                     player.sendMessage(output.getOutput());
                 }
             }
-        }.runTaskLater(Mcide.getPlugin(Mcide.class),0);
+        }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
     }
 
     public void save() {
         getOwner().save();
     }
 
-    public boolean isOwner(Player player){
+    public boolean isOwner(Player player) {
         return player.getUniqueId().equals(getOwner().getPlayerId());
     }
 
     public void open(Player player) {
-        if(!isOwner(player)){
+        if (!isOwner(player)) {
             player.sendMessage(Message.NOT_PROJECT_OWNER);
             return;
         }
-        ProjectMenu menu=new ProjectMenu(this);
+        ProjectMenu menu = new ProjectMenu(this);
         menu.open(player);
     }
 
-    public void editFile(MCCodeFile file,Player player) {
-        if(!isOwner(player)){
+    public void editFile(MCCodeFile file, Player player) {
+        if (!isOwner(player)) {
             player.sendMessage(Message.NOT_PROJECT_OWNER);
             return;
         }
-        ItemStack book=new ItemStack(Material.BOOK_AND_QUILL);
-        ItemMeta meta=book.getItemMeta();
+        ItemStack book = new ItemStack(Material.BOOK_AND_QUILL);
+        ItemMeta meta = book.getItemMeta();
 
-        BookMeta bookMeta= (BookMeta) meta;
-        for (String page:file.getContent())
+        BookMeta bookMeta = (BookMeta) meta;
+        for (String page : file.getContent())
             bookMeta.addPage(page);
         bookMeta.setTitle(file.getName());
         bookMeta.setAuthor(player.getName());
         book.setItemMeta(bookMeta);
 
-        ItemStack oldItem=player.getInventory().getItemInHand();
+        ItemStack oldItem = player.getInventory().getItemInHand();
 
         player.getInventory().setItemInHand(book);
         player.sendMessage(Message.RIGHT_CLICK_TO_EDIT);
@@ -174,27 +174,27 @@ public class CodeProject {
             //endregion
 
             @EventHandler
-            void onClick(InventoryClickEvent e){
-                if(book.equals(e.getCurrentItem()))
+            void onClick(InventoryClickEvent e) {
+                if (book.equals(e.getCurrentItem()))
                     e.setCancelled(true);
             }
 
             @EventHandler
-            void onDrop(PlayerDropItemEvent e){
-                if(book.equals(e.getItemDrop().getItemStack()))
+            void onDrop(PlayerDropItemEvent e) {
+                if (book.equals(e.getItemDrop().getItemStack()))
                     e.setCancelled(true);
             }
 
             @EventHandler
-            void onClick(PlayerMoveEvent e){
-                if(player.equals(e.getPlayer())&&!e.getFrom().getBlock().equals(e.getTo().getBlock())) {
+            void onClick(PlayerMoveEvent e) {
+                if (player.equals(e.getPlayer()) && !e.getFrom().getBlock().equals(e.getTo().getBlock())) {
                     reset();
-                    player.sendMessage(Message.createMessage(Message.EDIT_CANCELLED,file.getName()));
+                    player.sendMessage(Message.createMessage(Message.EDIT_CANCELLED, file.getName()));
                 }
             }
 
-            void reset(){
-                Listener listener=this;
+            void reset() {
+                Listener listener = this;
                 new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -202,34 +202,34 @@ public class CodeProject {
                         HandlerList.unregisterAll(listener);
                         new ProjectMenu(file.getProject()).open(player);
                     }
-                }.runTaskLater(Mcide.getPlugin(Mcide.class),1);
+                }.runTaskLater(Mcide.getPlugin(Mcide.class), 1);
             }
 
             @EventHandler
-            void onEdit(PlayerEditBookEvent e){
-                if(e.getPreviousBookMeta().equals(bookMeta)){
-                    BookMeta newMeta=e.getNewBookMeta();
+            void onEdit(PlayerEditBookEvent e) {
+                if (e.getPreviousBookMeta().equals(bookMeta)) {
+                    BookMeta newMeta = e.getNewBookMeta();
                     file.setContent(newMeta.getPages().toArray(new String[0]));
                     file.setName(newMeta.getTitle());
                     save();
-                    player.sendMessage(Message.createMessage(Message.EDIT_SUCCESS,file.getName()));
+                    player.sendMessage(Message.createMessage(Message.EDIT_SUCCESS, file.getName()));
                     reset();
                 }
             }
-        },Mcide.getPlugin(Mcide.class));
+        }, Mcide.getPlugin(Mcide.class));
     }
 
     public void addFile(Player p) {
-        MCCodeFile file=new MCCodeFile();
+        MCCodeFile file = new MCCodeFile();
         getMCCodeFiles().add(file);
         file.setProject(this);
         new ProjectMenu(this).open(p);
     }
 
     public void removeFile(Player p) {
-        int size=getMCCodeFiles().size();
-        if(size>1){
-            getMCCodeFiles().remove(size-1);
+        int size = getMCCodeFiles().size();
+        if (size > 1) {
+            getMCCodeFiles().remove(size - 1);
             new ProjectMenu(this).open(p);
         }
     }

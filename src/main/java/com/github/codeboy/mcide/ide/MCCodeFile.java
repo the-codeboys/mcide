@@ -53,7 +53,7 @@ public class MCCodeFile {
     }
 
     public CodeFile toCodeFile() {
-        String content = String.join("\n", this.content);
+        String content = String.join("", this.content);
         return name != null ? new CodeFile(name, content) : new CodeFile(content);
     }
 }
