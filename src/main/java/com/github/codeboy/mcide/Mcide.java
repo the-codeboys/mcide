@@ -6,6 +6,7 @@ import com.github.codeboy.mcide.commands.RunCommand;
 import com.github.codeboy.mcide.config.Config;
 import com.github.codeboy.mcide.config.ConfigReader;
 import com.github.codeboy.mcide.config.Message;
+import com.github.codeboy.piston4j.api.ExecutionOutput;
 import com.github.codeboy.piston4j.api.ExecutionResult;
 import com.github.codeboy.piston4j.api.Piston;
 import com.google.gson.Gson;
@@ -69,7 +70,7 @@ public final class Mcide extends JavaPlugin {
             String code = String.join("", arguments);
 
             ExecutionResult result = Mcide.getPiston().execute(language, code);
-            ExecutionResult.ExecutionOutput output = result.getOutput();
+            ExecutionOutput output = result.getOutput();
             sender.sendMessage(output.getOutput());
             System.out.println(result);
         }

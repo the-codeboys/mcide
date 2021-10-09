@@ -3,9 +3,7 @@ package com.github.codeboy.mcide.ide;
 import com.github.codeboy.mcide.Mcide;
 import com.github.codeboy.mcide.config.Message;
 import com.github.codeboy.mcide.ide.gui.ProjectMenu;
-import com.github.codeboy.piston4j.api.CodeFile;
-import com.github.codeboy.piston4j.api.ExecutionResult;
-import com.github.codeboy.piston4j.api.Piston;
+import com.github.codeboy.piston4j.api.*;
 import com.github.codeboy.piston4j.api.Runtime;
 import com.github.codeboy.piston4j.exceptions.PistonException;
 import org.bukkit.Bukkit;
@@ -95,7 +93,7 @@ public class CodeProject {
             public void run() {
                 player.sendMessage(Message.createMessage(Message.EXECUTION_START, getTitle()));
                 ExecutionResult result = project.run();
-                ExecutionResult.ExecutionOutput output = result.getOutput();
+                ExecutionOutput output = result.getOutput();
                 if (output.getOutput() == null && output.getOutput().length() == 0) {
                     player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT, getTitle()));
                     player.sendMessage(output.getStderr());

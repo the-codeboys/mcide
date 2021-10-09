@@ -1,6 +1,7 @@
 package com.github.codeboy.mcide.commands;
 
 import com.github.codeboy.mcide.Mcide;
+import com.github.codeboy.piston4j.api.ExecutionOutput;
 import com.github.codeboy.piston4j.api.ExecutionResult;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,7 +23,7 @@ public class RunCommand implements CommandExecutor {
         list.remove(0);
         String language = args[0], code = String.join(" ", list);
         ExecutionResult result = Mcide.getPiston().execute(language, code);
-        ExecutionResult.ExecutionOutput output = result.getOutput();
+        ExecutionOutput output = result.getOutput();
         sender.sendMessage(output.getOutput());
         System.out.println(result);
         return true;
