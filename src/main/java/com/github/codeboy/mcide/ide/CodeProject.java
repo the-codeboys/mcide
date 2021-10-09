@@ -28,6 +28,9 @@ import java.util.UUID;
 public class CodeProject {
 
     private final ArrayList<MCCodeFile> MCCodeFiles;
+    private final MCCodeFile input;
+    private final MCCodeFile args;
+
     private String language;
     private String title;
     private UUID ownerId;
@@ -41,6 +44,8 @@ public class CodeProject {
         }
         this.ownerId = ownerId;
         getOwner().getProjects().add(this);
+        args = new MCCodeFile("Args");
+        input = new MCCodeFile("Input");
     }
 
     public void init() {
@@ -59,6 +64,15 @@ public class CodeProject {
 
     public ArrayList<MCCodeFile> getMCCodeFiles() {
         return MCCodeFiles;
+    }
+
+
+    public MCCodeFile getInput() {
+        return input;
+    }
+
+    public MCCodeFile getArgs() {
+        return args;
     }
 
     public CodePlayer getOwner() {
@@ -83,7 +97,15 @@ public class CodeProject {
         Runtime runtime = piston.getRuntimeUnsafe(getLanguage());
         if (runtime == null)
             throw new PistonException("Runtime not found");
-        return runtime.execute(getMCCodeFiles().stream().map(MCCodeFile::toCodeFile).toArray(CodeFile[]::new));
+
+        ExecutionRequest request = new ExecutionRequest(runtime.getLanguage(), runtime.getVersion(), getMCCodeFiles().stream().map(MCCodeFile::toCodeFile).toArray(CodeFile[]::new));
+        if (input != null) {
+            request.setStdin(String.join("", input.getContent()));
+        }
+        if (args != null) {
+            request.setArgs(args.getContent());
+        }
+        return piston.execute(request);
     }
 
     public void run(Player player) {
