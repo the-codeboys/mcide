@@ -26,6 +26,9 @@ public class ProjectMenu extends Gui {
         addItem(createItem(Material.BANNER, Message.RUN), 46, project::run);
         addItem(createItem(Material.WORKBENCH, Message.CREATE_FILE), 47, project::addFile);
         addItem(createItem(Material.BARRIER, Message.DELETE_FILE), 48, project::removeFile);
+
+        addItemLast(createItem(Material.BOOK_AND_QUILL, "STDIN"), p -> project.editFile(project.getInput(), p));
+        addItemLast(createItem(Material.BOOK_AND_QUILL, "ARGS"), p -> project.editFile(project.getArgs(), p));
     }
 
     private void addFile(MCCodeFile file, boolean mainFile) {

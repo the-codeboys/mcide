@@ -8,6 +8,11 @@ public class MCCodeFile {
     private boolean mainFile;
     private transient CodeProject project;
 
+    public MCCodeFile(String name) {
+        this.name = name;
+        this.content = new String[0];
+    }
+
     public MCCodeFile(String name, String... content) {
         this.name = name;
         this.content = content;
