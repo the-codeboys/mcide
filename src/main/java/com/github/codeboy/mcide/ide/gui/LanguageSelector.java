@@ -2,8 +2,8 @@ package com.github.codeboy.mcide.ide.gui;
 
 import com.github.codeboy.mcide.Mcide;
 import com.github.codeboy.mcide.config.Message;
-import com.github.codeboy.mcide.gui.Gui;
 import com.github.codeboy.piston4j.api.Runtime;
+import ml.codeboy.bukkitbootstrap.gui.Gui;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

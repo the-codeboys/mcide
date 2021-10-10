@@ -1,5 +1,7 @@
 package com.github.codeboy.mcide.gui;
 
+import ml.codeboy.bukkitbootstrap.gui.Action;
+import ml.codeboy.bukkitbootstrap.gui.Gui;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

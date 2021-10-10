@@ -86,6 +86,10 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.the-codeboy</groupId>
+            <artifactId>BukkitBootstrap</artifactId>
+            <version>15341f48c3</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,7 @@
 package com.github.codeboy.mcide.config;
 
+import ml.codeboy.bukkitbootstrap.config.ConfigValue;
+
 public class Config {
     @ConfigValue
     public static String language = "english";

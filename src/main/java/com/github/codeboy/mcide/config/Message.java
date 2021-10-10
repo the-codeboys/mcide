@@ -1,5 +1,6 @@
 package com.github.codeboy.mcide.config;
 
+import ml.codeboy.bukkitbootstrap.config.ConfigValue;
 import org.bukkit.ChatColor;
 
 public class Message {
