@@ -7,6 +7,7 @@ import com.github.codeboy.mcide.ide.MCCodeFile;
 import ml.codeboy.bukkitbootstrap.gui.Gui;
 import ml.codeboy.bukkitbootstrap.gui.MultiPageGui;
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -48,6 +49,23 @@ public class ProjectMenu extends MultiPageGui {
     }
 
     public void removeFile() {
-        //todo add method body
+        ArrayList<Gui>pages=getPages();
+        for (int i = pages.size() - 1; i >= 0; i--) {
+            Gui page=pages.get(i);
+            Inventory inventory= page.getInventory();
+
+            int index = inventory.getSize() - 1;
+            while (index>=0) {
+                if(isProjectFile(inventory.getItem(index))){
+                    inventory.setItem(index,null);
+                    return;
+                }
+                index--;
+            }
+        }
+    }
+
+    private boolean isProjectFile(ItemStack itemStack){
+        return itemStack!=null&&itemStack.getType()==Material.BOOK_AND_QUILL;
     }
 }
