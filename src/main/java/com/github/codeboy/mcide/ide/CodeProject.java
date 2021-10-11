@@ -31,6 +31,8 @@ public class CodeProject {
     private final MCCodeFile input;
     private final MCCodeFile args;
 
+    private transient ProjectMenu projectMenu;
+
     private String language;
     private String title;
     private UUID ownerId;
@@ -53,7 +55,17 @@ public class CodeProject {
             file.setProject(this);
     }
 
+    private void openProjectMenu(Player player){
+        getProjectMenu().open(player);
+    }
+
     //region getter and setter
+
+
+    private ProjectMenu getProjectMenu() {
+        return projectMenu==null?(projectMenu=new ProjectMenu(this)):projectMenu;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -140,8 +152,7 @@ public class CodeProject {
             player.sendMessage(Message.NOT_PROJECT_OWNER);
             return;
         }
-        ProjectMenu menu = new ProjectMenu(this);
-        menu.open(player);
+        openProjectMenu(player);
     }
 
     public void editFile(MCCodeFile file, Player player) {
@@ -220,7 +231,7 @@ public class CodeProject {
                     public void run() {
                         player.getInventory().setItemInHand(oldItem);
                         HandlerList.unregisterAll(listener);
-                        new ProjectMenu(file.getProject()).open(player);
+                        file.getProject().open(player);
                     }
                 }.runTaskLater(Mcide.getPlugin(Mcide.class), 1);
             }
@@ -243,14 +254,14 @@ public class CodeProject {
         MCCodeFile file = new MCCodeFile();
         getMCCodeFiles().add(file);
         file.setProject(this);
-        new ProjectMenu(this).open(p);
+        getProjectMenu().addFile(file,false);
     }
 
     public void removeFile(Player p) {
         int size = getMCCodeFiles().size();
         if (size > 1) {
             getMCCodeFiles().remove(size - 1);
-            new ProjectMenu(this).open(p);
+            getProjectMenu().removeFile();
         }
     }
 }

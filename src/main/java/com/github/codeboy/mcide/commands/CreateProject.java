@@ -26,7 +26,7 @@ public class CreateProject implements CommandExecutor {
             CodeProject project = new CodeProject(runtime.getLanguage(), name, p.getUniqueId());
             project.save();
             p.sendMessage(Message.PROJECT_CREATE_SUCCESS);
-            new ProjectMenu(project).open(p);
+            project.open(p);
         }).open(p);
         return true;
     }

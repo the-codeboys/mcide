@@ -42,8 +42,12 @@ public class ProjectMenu extends MultiPageGui {
         return 50;
     }
 
-    private void addFile(MCCodeFile file, boolean mainFile) {
+    public void addFile(MCCodeFile file, boolean mainFile) {
         ItemStack fileItem = createItem(Material.BOOK_AND_QUILL, file.getName(), mainFile);
         addItem(fileItem, p -> project.editFile(file, p));
+    }
+
+    public void removeFile() {
+        //todo add method body
     }
 }
