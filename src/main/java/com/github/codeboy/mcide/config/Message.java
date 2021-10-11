@@ -5,6 +5,15 @@ import org.bukkit.ChatColor;
 
 public class Message {
 
+    // region GUI
+    @ConfigValue
+    public static String
+            RUN_OPTION_TITLE = "Run options",
+            RUN_CHAT_OPTION = "Chat output",
+            RUN_CHAT_OPTION_LORE = "Prints the output to chat",
+            RUN_BOOK_OPTION = "Book output",
+            RUN_BOOK_OPTION_LORE = "Will redirect the output to written book";
+    // endregion
     // region info
     @ConfigValue
     public static String PROJECTS = "projects",

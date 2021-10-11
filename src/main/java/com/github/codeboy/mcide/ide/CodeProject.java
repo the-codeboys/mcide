@@ -6,6 +6,7 @@ import com.github.codeboy.mcide.ide.gui.ProjectMenu;
 import com.github.codeboy.piston4j.api.*;
 import com.github.codeboy.piston4j.api.Runtime;
 import com.github.codeboy.piston4j.exceptions.PistonException;
+import ml.codeboy.bukkitbootstrap.gui.Gui;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -55,7 +56,7 @@ public class CodeProject {
             file.setProject(this);
     }
 
-    private void openProjectMenu(Player player){
+    private void openProjectMenu(Player player) {
         getProjectMenu().open(player);
     }
 
@@ -63,7 +64,7 @@ public class CodeProject {
 
 
     private ProjectMenu getProjectMenu() {
-        return projectMenu==null?(projectMenu=new ProjectMenu(this)):projectMenu;
+        return projectMenu == null ? (projectMenu = new ProjectMenu(this)) : projectMenu;
     }
 
     public String getTitle() {
@@ -121,6 +122,10 @@ public class CodeProject {
     }
 
     public void run(Player player) {
+        run(player, false);
+    }
+
+    public void run(Player player, boolean bookOutput) {
         CodeProject project = this;
         new BukkitRunnable() {
             @Override
@@ -128,15 +133,58 @@ public class CodeProject {
                 player.sendMessage(Message.createMessage(Message.EXECUTION_START, getTitle()));
                 ExecutionResult result = project.run();
                 ExecutionOutput output = result.getOutput();
-                if (output.getOutput() == null && output.getOutput().length() == 0) {
-                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT, getTitle()));
-                    player.sendMessage(output.getStderr());
+                if (bookOutput) {
+
+                    ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+                    ItemMeta meta = book.getItemMeta();
+
+                    BookMeta bookMeta = (BookMeta) meta;
+
+                    StringBuilder builder = new StringBuilder();
+                    int lineNumber = 0;
+                    int charCount = 0;
+                    for (String world : output.getOutput().split(" ")) {
+                        charCount += world.length() + 1;
+                        if (charCount < 19) {
+                            builder.append(world).append(' ');
+                        } else {
+                            if (lineNumber > 12) {
+                                lineNumber = 0;
+                                bookMeta.addPage(builder.toString());
+                                builder.setLength(0);
+                            }
+                            builder.append("\n").append(world).append(' ');
+                            charCount = 0;
+                            lineNumber++;
+                        }
+                    }
+                    if (builder.length() > 0) {
+                        bookMeta.addPage(builder.toString());
+                    }
+                    bookMeta.setTitle("OUTPUT");
+                    bookMeta.setAuthor("Piston");
+                    book.setItemMeta(bookMeta);
+
+                    player.getInventory().addItem(book);
                 } else {
-                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_SUCCESS, getTitle()));
-                    player.sendMessage(output.getOutput());
+
+                    if (output.getOutput() == null && output.getOutput().length() == 0) {
+                        player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT, getTitle()));
+                        player.sendMessage(output.getStderr());
+                    } else {
+                        player.sendMessage(Message.createMessage(Message.RUN_PROJECT_SUCCESS, getTitle()));
+                        player.sendMessage(output.getOutput());
+                    }
                 }
             }
         }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
+    }
+
+    public void runDialog(Player player) {
+        Gui options = new Gui(Mcide.getPlugin(Mcide.class), 9, Message.RUN_OPTION_TITLE);
+        options.addItem(Gui.createItem(Material.COMMAND, Message.RUN_CHAT_OPTION, Message.RUN_CHAT_OPTION_LORE), p -> run(p, false));
+        options.addItem(Gui.createItem(Material.BOOK, Message.RUN_BOOK_OPTION, Message.RUN_BOOK_OPTION_LORE), p -> run(p, true));
+        options.open(player);
     }
 
     public void save() {
@@ -254,7 +302,7 @@ public class CodeProject {
         MCCodeFile file = new MCCodeFile();
         getMCCodeFiles().add(file);
         file.setProject(this);
-        getProjectMenu().addFile(file,false);
+        getProjectMenu().addFile(file, false);
     }
 
     public void removeFile(Player p) {

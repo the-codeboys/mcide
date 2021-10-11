@@ -18,7 +18,7 @@ public class ProjectMenu extends MultiPageGui {
     public ProjectMenu(CodeProject project) {
         super(Mcide.getPlugin(Mcide.class), 54, project.getTitle(), (Gui page) -> {
             page.addItem(createItem(Material.ARROW, Message.BACK), 45, p -> new ProjectSelector(p).open(p));
-            page.addItem(createItem(Material.BANNER, Message.RUN), 46, project::run);
+            page.addItem(createItem(Material.BANNER, Message.RUN), 46, project::runDialog);
             page.addItem(createItem(Material.WORKBENCH, Message.CREATE_FILE), 47, project::addFile);
             page.addItem(createItem(Material.BARRIER, Message.DELETE_FILE), 48, project::removeFile);
 
