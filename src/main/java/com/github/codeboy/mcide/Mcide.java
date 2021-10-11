@@ -50,7 +50,7 @@ public final class Mcide extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onPlayerJoin(PlayerJoinEvent event) {
-                event.getPlayer().setResourcePack("https://github.com/the-codeboy/mcide/raw/dev/resourcepack/mcide.zip");
+                event.getPlayer().setResourcePack("https://github.com/the-codeboy/mcide/releases/download/latest/mcide.zip");
             }
         }, this);
 
