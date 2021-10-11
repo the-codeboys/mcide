@@ -13,6 +13,9 @@ import ml.codeboy.bukkitbootstrap.config.ConfigReader;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -44,6 +47,12 @@ public final class Mcide extends JavaPlugin {
         getCommand("run").setExecutor(new RunCommand());
         getCommand("ide").setExecutor(new IdeCommand());
         getCommand("create-project").setExecutor(new CreateProject());
+        getServer().getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onPlayerJoin(PlayerJoinEvent event) {
+                event.getPlayer().setResourcePack("https://github.com/the-codeboy/mcide/releases/download/latest/mcide.zip");
+            }
+        }, this);
 
     }
 
