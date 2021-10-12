@@ -1,5 +1,6 @@
 package com.github.codeboy.mcide;
 
+import com.github.codeboy.mcide.commands.BoundItemCommand;
 import com.github.codeboy.mcide.commands.CreateProject;
 import com.github.codeboy.mcide.commands.IdeCommand;
 import com.github.codeboy.mcide.commands.RunCommand;
@@ -9,8 +10,10 @@ import com.github.codeboy.piston4j.api.ExecutionOutput;
 import com.github.codeboy.piston4j.api.ExecutionResult;
 import com.github.codeboy.piston4j.api.Piston;
 import com.google.gson.Gson;
+import ml.codeboy.bukkitbootstrap.CustomItem;
 import ml.codeboy.bukkitbootstrap.config.ConfigReader;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -18,6 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +42,11 @@ public final class Mcide extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        try {
+            CustomItem item = CustomItem.createItem("Open menu", Material.GOLD_HOE, (short) 0);
+        } catch (InstanceAlreadyExistsException e) {
+            e.printStackTrace();
+        }
 
         readConfigs();
 
@@ -47,6 +56,8 @@ public final class Mcide extends JavaPlugin {
         getCommand("run").setExecutor(new RunCommand());
         getCommand("ide").setExecutor(new IdeCommand());
         getCommand("create-project").setExecutor(new CreateProject());
+        getCommand("bound-item").setExecutor(new BoundItemCommand());
+        getServer().getPluginManager().registerEvents(new BoundItemCommand(), this);
         getServer().getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onPlayerJoin(PlayerJoinEvent event) {
