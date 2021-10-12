@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class ProjectMenu extends MultiPageGui {
     private final CodeProject project;
+    private final int filesPerPage=9*4;
 
     public ProjectMenu(CodeProject project) {
         super(Mcide.getPlugin(Mcide.class), 54, project.getTitle(), (Gui page) -> {
@@ -45,24 +46,19 @@ public class ProjectMenu extends MultiPageGui {
 
     public void addFile(MCCodeFile file, boolean mainFile) {
         ItemStack fileItem = createItem(Material.BOOK_AND_QUILL, file.getName(), mainFile);
-        addItem(fileItem, p -> project.editFile(file, p));
+        int files=project.getMCCodeFiles().size()-1;
+        int pageNumber=files/filesPerPage;
+        int slotNumber=files%filesPerPage;
+        Gui page= getPages().get(pageNumber);
+        page.addItem(fileItem, slotNumber, p -> project.editFile(file, p));
     }
 
     public void removeFile() {
-        ArrayList<Gui>pages=getPages();
-        for (int i = pages.size() - 1; i >= 0; i--) {
-            Gui page=pages.get(i);
-            Inventory inventory= page.getInventory();
-
-            int index = inventory.getSize() - 1;
-            while (index>=0) {
-                if(isProjectFile(inventory.getItem(index))){
-                    inventory.setItem(index,null);
-                    return;
-                }
-                index--;
-            }
-        }
+        int files=project.getMCCodeFiles().size()-1;
+        int pageNumber=files/filesPerPage;
+        int slotNumber=files%filesPerPage;
+        Gui page= getPages().get(pageNumber);
+        page.removeItem(slotNumber);
     }
 
     private boolean isProjectFile(ItemStack itemStack){
