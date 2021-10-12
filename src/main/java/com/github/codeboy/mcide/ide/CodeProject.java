@@ -133,6 +133,10 @@ public class CodeProject {
                 player.sendMessage(Message.createMessage(Message.EXECUTION_START, getTitle()));
                 ExecutionResult result = project.run();
                 ExecutionOutput output = result.getOutput();
+                ExecutionOutput compileOutput = result.getCompileOutput();
+                String combinedOutput = compileOutput != null ? compileOutput.getOutput():"" + output.getOutput();
+                boolean failed = output.getStderr().length() != 0
+                        || (compileOutput !=null && compileOutput.getStderr().length() != 0);
                 if (bookOutput) {
 
                     ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
@@ -143,7 +147,7 @@ public class CodeProject {
                     StringBuilder builder = new StringBuilder();
                     int lineNumber = 0;
                     int charCount = 0;
-                    for (String world : output.getOutput().split(" ")) {
+                    for (String world : combinedOutput.split(" ")) {
                         charCount += world.length() + 1;
                         if (charCount < 19) {
                             builder.append(world).append(' ');
@@ -156,25 +160,22 @@ public class CodeProject {
                             builder.append("\n").append(world).append(' ');
                             charCount = 0;
                             lineNumber++;
-                        }
-                    }
+                        }}
                     if (builder.length() > 0) {
                         bookMeta.addPage(builder.toString());
                     }
-                    bookMeta.setTitle("OUTPUT");
+                    bookMeta.setTitle(failed?"FAILED":"OUTPUT");
                     bookMeta.setAuthor("Piston");
                     book.setItemMeta(bookMeta);
 
                     player.getInventory().addItem(book);
                 } else {
-
-                    if (output.getOutput() == null && output.getOutput().length() == 0) {
+                    if (failed) {
                         player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT, getTitle()));
-                        player.sendMessage(output.getStderr());
                     } else {
                         player.sendMessage(Message.createMessage(Message.RUN_PROJECT_SUCCESS, getTitle()));
-                        player.sendMessage(output.getOutput());
                     }
+                    player.sendMessage(combinedOutput);
                 }
             }
         }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
