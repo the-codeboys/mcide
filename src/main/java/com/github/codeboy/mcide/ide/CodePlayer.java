@@ -75,15 +75,6 @@ public class CodePlayer {
         }
     }
 
-    public void runProject(CodeProject project) {
-        OfflinePlayer offlinePlayer = getPlayer();
-        if (!offlinePlayer.isOnline())
-            throw new IllegalStateException("Can not run project while owner is offline!");
-        Player player = offlinePlayer.getPlayer();
-        player.sendMessage(createMessage(Message.EXECUTION_START, project.getTitle()));
-        ExecutionResult result = project.run();
-    }
-
     //region getters and setters
     public List<CodeProject> getProjects() {
         return projects;
