@@ -1,12 +1,14 @@
 package com.github.codeboy.mcide.config;
 
-import ml.codeboy.bukkitbootstrap.config.ConfigValue;
+import ml.codeboy.bukkitbootstrap.config.ConfigScope;
+import ml.codeboy.bukkitbootstrap.config.Configurable;
 import org.bukkit.ChatColor;
 
+@Configurable(name = "message.yml",comments = "Edit these messages however you like\n" +
+        "It should be self explanatory where they are used",scope = ConfigScope.PUBLIC)
 public class Message {
 
     // region GUI
-    @ConfigValue
     public static String
             RUN_OPTION_TITLE = "Run options",
             RUN_CHAT_OPTION = "Chat output",
@@ -15,7 +17,6 @@ public class Message {
             RUN_BOOK_OPTION_LORE = "Will redirect the output to written book";
     // endregion
     // region info
-    @ConfigValue
     public static String PROJECTS = "projects",
             EXECUTION_START = ChatColor.BLUE + "Running project {0}",
             RIGHT_CLICK_TO_EDIT = ChatColor.BLUE + "Right click to edit. Move to cancel",
@@ -26,7 +27,6 @@ public class Message {
             DELETE_FILE = ChatColor.RED + "delete file",
             EDIT_CANCELLED = ChatColor.DARK_RED + "Cancelled editing file {0}";
     //region error
-    @ConfigValue
     public static String CMD_PLAYER_ONLY = ChatColor.RED + "Only players can use this command",
             LANGUAGE_AND_NAME_REQUIRED = ChatColor.RED + "You need to specify a language and a name for the project",
             NAME_REQUIRED = ChatColor.RED + "You need to specify a name!",
@@ -34,7 +34,6 @@ public class Message {
             NOT_PROJECT_OWNER = ChatColor.RED + "You are not the owner of this project";
     // endregion
     //region success
-    @ConfigValue
     public static String PROJECT_CREATE_SUCCESS = ChatColor.GREEN + "Project created successfully",
             RUN_PROJECT_SUCCESS = ChatColor.GREEN + "Ran project \"{0}\" successfully. Here is your output:",
             EDIT_SUCCESS = ChatColor.GREEN + "Edited file {0} successfully";
