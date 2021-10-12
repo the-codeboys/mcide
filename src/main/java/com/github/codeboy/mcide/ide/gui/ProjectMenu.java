@@ -49,9 +49,11 @@ public class ProjectMenu extends MultiPageGui {
         int files=project.getMCCodeFiles().size()-1;
         int pageNumber=files/filesPerPage;
         int slotNumber=files%filesPerPage;
-        if(pageNumber>=getPages().size())
-            createPage();
-        Gui page= getPages().get(pageNumber);
+        ArrayList<Gui>pages=getPages();
+        while (pageNumber>=pages.size()) {
+            pages.add(createPage());
+        }
+        Gui page= pages.get(pageNumber);
         page.addItem(fileItem, slotNumber, p -> project.editFile(file, p));
     }
 
