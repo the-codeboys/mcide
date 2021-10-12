@@ -1,9 +1,12 @@
 package com.github.codeboy.mcide.config;
 
+import ml.codeboy.bukkitbootstrap.config.ConfigScope;
 import ml.codeboy.bukkitbootstrap.config.ConfigValue;
+import ml.codeboy.bukkitbootstrap.config.Configurable;
 
+@Configurable(name = "config.yml",comments = "Edit these values however you like\n" +
+        "They should be self explanatory",scope = ConfigScope.PUBLIC)
 public class Config {
-    @ConfigValue
     public static String language = "english";
 
     @ConfigValue(key = "piston.endpoint")
