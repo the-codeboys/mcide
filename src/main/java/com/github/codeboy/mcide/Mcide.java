@@ -6,6 +6,7 @@ import com.github.codeboy.mcide.commands.IdeCommand;
 import com.github.codeboy.mcide.commands.RunCommand;
 import com.github.codeboy.mcide.config.Config;
 import com.github.codeboy.mcide.config.Message;
+import com.github.codeboy.mcide.services.CustomItemEventManager;
 import com.github.codeboy.piston4j.api.ExecutionOutput;
 import com.github.codeboy.piston4j.api.ExecutionResult;
 import com.github.codeboy.piston4j.api.Piston;
@@ -42,12 +43,6 @@ public final class Mcide extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        try {
-            CustomItem item = CustomItem.createItem("Open menu", Material.GOLD_HOE, (short) 0);
-        } catch (InstanceAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-
         readConfigs();
 
         piston = Piston.getInstance(Config.pistonEndPoint);
@@ -57,13 +52,14 @@ public final class Mcide extends JavaPlugin {
         getCommand("ide").setExecutor(new IdeCommand());
         getCommand("create-project").setExecutor(new CreateProject());
         getCommand("bound-item").setExecutor(new BoundItemCommand());
-        getServer().getPluginManager().registerEvents(new BoundItemCommand(), this);
         getServer().getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onPlayerJoin(PlayerJoinEvent event) {
                 event.getPlayer().setResourcePack("https://github.com/the-codeboy/mcide/releases/download/latest/mcide.zip");
             }
         }, this);
+
+        getServer().getPluginManager().registerEvents(new CustomItemEventManager(), Mcide.getPlugin(Mcide.class));
 
     }
 

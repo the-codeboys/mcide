@@ -1,40 +1,34 @@
 package com.github.codeboy.mcide.commands;
 
 import com.github.codeboy.mcide.ide.gui.ProjectSelector;
+import com.github.codeboy.mcide.services.CustomItemEventManager;
 import ml.codeboy.bukkitbootstrap.CustomItem;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.block.Action;
 
-public class BoundItemCommand implements CommandExecutor, Listener {
+public class BoundItemCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             return false;
         }
         Player player = (Player) sender;
-        CustomItem item = CustomItem.getItem("Open menu");
-        if (item != null) {
-            player.getInventory().addItem(item.getItem());
-            return true;
-        }
-        return false;
-    }
+        CustomItem customItem =  CustomItem.createItemOrGet("Open menu", Material.GOLD_HOE, (short) 0);
+        player.getInventory().addItem(customItem.getItem());
 
-    @EventHandler
-    public void onPlayerUse(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        ItemStack item = player.getItemInHand();
-        CustomItem customItem = CustomItem.getItem("Open menu");
-        if (customItem != null && customItem.itemIsInstance(item) && player.getOpenInventory() != null) {
-            ProjectSelector menu = new ProjectSelector(player);
-            menu.open(player);
-            event.setCancelled(true);
-        }
+        CustomItemEventManager.addInteraction(customItem, event -> {
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                Player p = event.getPlayer();
+                event.setCancelled(true);
+                ProjectSelector menu = new ProjectSelector(p);
+                menu.open(p);
+                event.setCancelled(true);
+            }
+        });
+        return true;
     }
 }
