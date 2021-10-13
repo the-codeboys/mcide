@@ -4,7 +4,7 @@ import ml.codeboy.bukkitbootstrap.config.ConfigScope;
 import ml.codeboy.bukkitbootstrap.config.Configurable;
 import org.bukkit.ChatColor;
 
-@Configurable(name = "message.yml",comments = "Edit these messages however you like\n" +
+@Configurable(comments = "Edit these messages however you like\n" +
         "It should be self explanatory where they are used",scope = ConfigScope.PUBLIC)
 public class Message {
 
