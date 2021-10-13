@@ -35,17 +35,6 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Copy build jars to build folder
-        run: |
-          mkdir staging
-          cp target/*.jar staging
-
-      - name: Adding build folder to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Package
-          path: staging
-
       - name: Package resource pack
         run: |
           cd resourcepack
