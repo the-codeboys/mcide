@@ -46,35 +46,40 @@ public class ProjectMenu extends MultiPageGui {
 
     @Override
     protected Gui createPage() {
-        Gui gui= super.createPage();
-        ItemStack item = createItem(Material.STAINED_GLASS_PANE,"-");
+        Gui gui = super.createPage();
+        ItemStack item = createItem(Material.STAINED_GLASS_PANE, "-");
         for (int i = 0; i < 9; i++) {
-            gui.addItemLast(item, Action.none);
+            gui.addItem(item, 54 - 18 + i, Action.none);
         }
         return gui;
     }
 
     public void addFile(MCCodeFile file, boolean mainFile) {
         ItemStack fileItem = createItem(Material.BOOK_AND_QUILL, file.getName(), mainFile);
-        int files = project.getMCCodeFiles().size() - 1;
-        int pageNumber = files / filesPerPage;
-        int slotNumber = files % filesPerPage;
         ArrayList<Gui> pages = getPages();
-        while (pageNumber >= pages.size()) {
-            addNextButton(pages.get(pages.size() - 1));
-            pages.add(createPage());
-            addPrevButton(pages.get(pages.size() - 1));
+        int index = 0;
+        Gui lastPage;
+        do {
+            lastPage = pages.get(index++);
+        } while (lastPage.getFreeSlot() > filesPerPage && index < pages.size());
+        int freeSlot = lastPage.getFreeSlot();
+        if (freeSlot > filesPerPage) {
+            addNextButton(lastPage);
+            lastPage = createPage();
+            pages.add(lastPage);
+            addPrevButton(lastPage);
         }
-        Gui page = pages.get(pageNumber);
-        page.addItem(fileItem, slotNumber, p -> project.editFile(file, p));
+        lastPage.addItem(fileItem, p -> project.editFile(file, p));
     }
 
     public void removeFile() {
-        int files = project.getMCCodeFiles().size() - 1;
-        int pageNumber = files / filesPerPage;
-        int slotNumber = files % filesPerPage;
-        Gui page = getPages().get(pageNumber);
-        page.removeItem(slotNumber);
+        int files = project.getMCCodeFiles().size();
+        if (!project.getMCCodeFiles().get(files - 1).isMainFile()) {
+            int pageNumber = files / filesPerPage;
+            int slotNumber = files % filesPerPage;
+            Gui page = getPages().get(pageNumber);
+            page.removeItem(slotNumber);
+        }
     }
 
     private boolean isProjectFile(ItemStack itemStack) {
