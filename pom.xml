@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.github.the-codeboy</groupId>
             <artifactId>BukkitBootstrap</artifactId>
-            <version>f6879926bc</version>
+            <version>6b7cd63491</version>
         </dependency>
     </dependencies>
 </project>
