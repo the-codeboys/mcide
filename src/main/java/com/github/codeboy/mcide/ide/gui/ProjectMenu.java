@@ -4,6 +4,7 @@ import com.github.codeboy.mcide.Mcide;
 import com.github.codeboy.mcide.config.Message;
 import com.github.codeboy.mcide.ide.CodeProject;
 import com.github.codeboy.mcide.ide.MCCodeFile;
+import ml.codeboy.bukkitbootstrap.gui.Action;
 import ml.codeboy.bukkitbootstrap.gui.Gui;
 import ml.codeboy.bukkitbootstrap.gui.MultiPageGui;
 import org.bukkit.Material;
@@ -41,6 +42,16 @@ public class ProjectMenu extends MultiPageGui {
     @Override
     protected int getPrevButtonIndex() {
         return 50;
+    }
+
+    @Override
+    protected Gui createPage() {
+        Gui gui= super.createPage();
+        ItemStack item = createItem(Material.STAINED_GLASS_PANE,"-");
+        for (int i = 0; i < 9; i++) {
+            gui.addItemLast(item, Action.none);
+        }
+        return gui;
     }
 
     public void addFile(MCCodeFile file, boolean mainFile) {
