@@ -6,7 +6,7 @@
 
     <groupId>com.github.codeboy</groupId>
     <artifactId>mcide</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.1</version>
     <packaging>jar</packaging>
 
     <name>Mcide</name>
@@ -43,6 +43,18 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>5.2.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
         <resources>
@@ -85,15 +97,9 @@
             <version>v0.0.6</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.the-codeboy</groupId>
             <artifactId>BukkitBootstrap</artifactId>
-            <version>d663859a9d</version>
+            <version>f821d5e8d4</version>
         </dependency>
     </dependencies>
 </project>
