@@ -105,7 +105,7 @@ public class CodeProject {
     }
     //endregion
 
-    public ExecutionResult run() {
+    public ExecutionResult runToChat() {
         Piston piston = Mcide.getPiston();
         Runtime runtime = piston.getRuntimeUnsafe(getLanguage());
         if (runtime == null)
@@ -121,71 +121,110 @@ public class CodeProject {
         return piston.execute(request);
     }
 
-    public void run(Player player) {
-        run(player, false);
+    private ExecutionResult beforeRun(CodeProject project, Player player) {
+        player.sendMessage(Message.createMessage(Message.EXECUTION_START, getTitle()));
+        return project.runToChat();
     }
 
-    public void run(Player player, boolean bookOutput) {
+    private boolean onlyErrorResult(ExecutionResult result) {
+        ExecutionOutput output = result.getOutput();
+        ExecutionOutput compileOutput = result.getCompileOutput();
+        return output.getStderr().length() != 0
+                || (compileOutput != null && compileOutput.getStderr().length() != 0);
+    }
+
+    public void runToChat(Player player) {
+
         CodeProject project = this;
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.sendMessage(Message.createMessage(Message.EXECUTION_START, getTitle()));
-                ExecutionResult result = project.run();
+                ExecutionResult result = beforeRun(project, player);
                 ExecutionOutput output = result.getOutput();
                 ExecutionOutput compileOutput = result.getCompileOutput();
-                String combinedOutput = compileOutput != null ? compileOutput.getOutput():"" + output.getOutput();
-                boolean failed = output.getStderr().length() != 0
-                        || (compileOutput !=null && compileOutput.getStderr().length() != 0);
-                if (bookOutput) {
-
-                    ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
-                    ItemMeta meta = book.getItemMeta();
-
-                    BookMeta bookMeta = (BookMeta) meta;
-
-                    StringBuilder builder = new StringBuilder();
-                    int lineNumber = 0;
-                    int charCount = 0;
-                    for (String world : combinedOutput.split(" ")) {
-                        charCount += world.length() + 1;
-                        if (charCount < 19) {
-                            builder.append(world).append(' ');
-                        } else {
-                            if (lineNumber > 12) {
-                                lineNumber = 0;
-                                bookMeta.addPage(builder.toString());
-                                builder.setLength(0);
-                            }
-                            builder.append("\n").append(world).append(' ');
-                            charCount = 0;
-                            lineNumber++;
-                        }}
-                    if (builder.length() > 0) {
-                        bookMeta.addPage(builder.toString());
-                    }
-                    bookMeta.setTitle(failed?"FAILED":"OUTPUT");
-                    bookMeta.setAuthor("Piston");
-                    book.setItemMeta(bookMeta);
-
-                    player.getInventory().addItem(book);
+                String combinedOutput = compileOutput != null ? compileOutput.getOutput() : "" + output.getOutput();
+                boolean failed = onlyErrorResult(result);
+                if (failed) {
+                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT, getTitle()));
                 } else {
-                    if (failed) {
-                        player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT, getTitle()));
-                    } else {
-                        player.sendMessage(Message.createMessage(Message.RUN_PROJECT_SUCCESS, getTitle()));
-                    }
-                    player.sendMessage(combinedOutput);
+                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_SUCCESS, getTitle()));
                 }
+                player.sendMessage(combinedOutput);
+            }
+        }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
+    }
+
+    public void runToBook(Player player) {
+        CodeProject project = this;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                ExecutionResult result = beforeRun(project, player);
+                ExecutionOutput output = result.getOutput();
+                ExecutionOutput compileOutput = result.getCompileOutput();
+                String combinedOutput = compileOutput != null ? compileOutput.getOutput() : "" + output.getOutput();
+                boolean failed = onlyErrorResult(result);
+
+                ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+                ItemMeta meta = book.getItemMeta();
+
+                BookMeta bookMeta = (BookMeta) meta;
+
+                StringBuilder builder = new StringBuilder();
+                int lineNumber = 0;
+                int charCount = 0;
+                for (String world : combinedOutput.split(" ")) {
+                    charCount += world.length() + 1;
+                    if (charCount < 19) {
+                        builder.append(world).append(' ');
+                    } else {
+                        if (lineNumber > 12) {
+                            lineNumber = 0;
+                            bookMeta.addPage(builder.toString());
+                            builder.setLength(0);
+                        }
+                        builder.append("\n").append(world).append(' ');
+                        charCount = 0;
+                        lineNumber++;
+                    }
+                }
+                if (builder.length() > 0) {
+                    bookMeta.addPage(builder.toString());
+                }
+                bookMeta.setTitle(failed ? "FAILED" : "OUTPUT");
+                bookMeta.setAuthor("Piston");
+                book.setItemMeta(bookMeta);
+
+                player.getInventory().addItem(book);
             }
         }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
     }
 
     public void runDialog(Player player) {
         Gui options = new Gui(Mcide.getPlugin(Mcide.class), 9, Message.RUN_OPTION_TITLE);
-        options.addItem(Gui.createItem(Material.COMMAND, Message.RUN_CHAT_OPTION, Message.RUN_CHAT_OPTION_LORE), p -> run(p, false));
-        options.addItem(Gui.createItem(Material.BOOK, Message.RUN_BOOK_OPTION, Message.RUN_BOOK_OPTION_LORE), p -> run(p, true));
+        options.addItem(Gui.createItem(Material.LOG, Message.RUN_CHAT_OPTION, Message.RUN_CHAT_OPTION_LORE), this::runToChat);
+        options.addItem(Gui.createItem(Material.BOOK, Message.RUN_BOOK_OPTION, Message.RUN_BOOK_OPTION_LORE), this::runToBook);
+        options.addItem(Gui.createItem(Material.COMMAND, Message.RUN_AND_EXECUTE_OPTION, Message.RUN_AND_EXECUTE_OPTION_LORE), this::runAndExecute);
         options.open(player);
+    }
+
+    private void runAndExecute(Player player) {
+        CodeProject project = this;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                ExecutionResult result = beforeRun(project, player);
+                ExecutionOutput output = result.getOutput();
+                ExecutionOutput compileOutput = result.getCompileOutput();
+                String combinedOutput = compileOutput != null ? compileOutput.getOutput() : "" + output.getOutput();
+                boolean failed = onlyErrorResult(result);
+                if(failed){
+                    player.sendMessage(Message.createMessage(Message.RUN_PROJECT_ERROR_OUTPUT,project.getTitle())+combinedOutput);
+                }else{
+                    player.performCommand(combinedOutput.trim());
+                }
+            }
+        }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
     }
 
     public void save() {
