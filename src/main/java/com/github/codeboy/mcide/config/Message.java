@@ -8,6 +8,10 @@ import org.bukkit.ChatColor;
         "It should be self explanatory where they are used",scope = ConfigScope.PUBLIC)
 public class Message {
 
+    // region CUSTOM_ITEM
+    public static String
+            ITEM_PROJECT_SELECTOR = "Open Menu";
+    // endregion
     // region GUI
     public static String
             RUN_OPTION_TITLE = "Run options",

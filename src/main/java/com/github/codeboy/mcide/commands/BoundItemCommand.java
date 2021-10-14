@@ -1,5 +1,6 @@
 package com.github.codeboy.mcide.commands;
 
+import com.github.codeboy.mcide.config.Message;
 import com.github.codeboy.mcide.ide.gui.ProjectSelector;
 import com.github.codeboy.mcide.services.CustomItemEventManager;
 import ml.codeboy.bukkitbootstrap.CustomItem;
@@ -17,7 +18,7 @@ public class BoundItemCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player) sender;
-        CustomItem customItem =  CustomItem.createItemOrGet("Open menu", Material.GOLD_HOE, (short) 0);
+        CustomItem customItem =  CustomItem.createItemOrGet(player.getPlayerListName(), Material.GOLD_HOE, (short) 0);
         player.getInventory().addItem(customItem.getItem());
 
         CustomItemEventManager.addInteraction(customItem, event -> {
