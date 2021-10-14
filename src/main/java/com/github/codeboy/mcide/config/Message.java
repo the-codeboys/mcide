@@ -18,7 +18,9 @@ public class Message {
             RUN_CHAT_OPTION = "Chat output",
             RUN_CHAT_OPTION_LORE = "Prints the output to chat",
             RUN_BOOK_OPTION = "Book output",
-            RUN_BOOK_OPTION_LORE = "Will redirect the output to written book";
+            RUN_BOOK_OPTION_LORE = "Will redirect the output to written book",
+            RUN_AND_EXECUTE_OPTION = "Execute output as command",
+            RUN_AND_EXECUTE_OPTION_LORE = "Will execute output of the code as command";
     // endregion
     // region info
     public static String PROJECTS = "projects",
