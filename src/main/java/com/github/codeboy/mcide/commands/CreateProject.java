@@ -2,8 +2,8 @@ package com.github.codeboy.mcide.commands;
 
 import com.github.codeboy.mcide.config.Message;
 import com.github.codeboy.mcide.ide.CodeProject;
+import com.github.codeboy.mcide.ide.OwnedCodeProject;
 import com.github.codeboy.mcide.ide.gui.LanguageSelector;
-import com.github.codeboy.mcide.ide.gui.ProjectMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +23,7 @@ public class CreateProject implements CommandExecutor {
         }
         String name = String.join(" ", args);
         new LanguageSelector(runtime -> {
-            CodeProject project = new CodeProject(runtime.getLanguage(), name, p.getUniqueId());
+            CodeProject project = new OwnedCodeProject(runtime.getLanguage(), name, p.getUniqueId());
             project.save();
             p.sendMessage(Message.PROJECT_CREATE_SUCCESS);
             project.open(p);

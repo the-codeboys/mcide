@@ -2,8 +2,6 @@ package com.github.codeboy.mcide.ide;
 
 import com.github.codeboy.mcide.Mcide;
 import com.github.codeboy.mcide.Util;
-import com.github.codeboy.mcide.config.Message;
-import com.github.codeboy.piston4j.api.ExecutionResult;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -16,12 +14,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static com.github.codeboy.mcide.config.Message.createMessage;
-
 public class CodePlayer {
     private static final HashMap<UUID, CodePlayer> codePlayers = new HashMap<>();
     private final UUID playerId;
-    private List<CodeProject> projects = new ArrayList<>();
+    private List<OwnedCodeProject> projects = new ArrayList<>();
 
     public CodePlayer(UUID playerId) {
         this.playerId = playerId;
@@ -76,11 +72,11 @@ public class CodePlayer {
     }
 
     //region getters and setters
-    public List<CodeProject> getProjects() {
+    public List<OwnedCodeProject> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<CodeProject> projects) {
+    public void setProjects(List<OwnedCodeProject> projects) {
         this.projects = projects;
     }
 

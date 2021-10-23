@@ -36,17 +36,14 @@ public class CodeProject {
 
     private String language;
     private String title;
-    private UUID ownerId;
 
-    public CodeProject(String language, String title, UUID ownerId, MCCodeFile... MCCodeFiles) {
+    public CodeProject(String language, String title, MCCodeFile... MCCodeFiles) {
         this.language = language;
         this.title = title;
         this.MCCodeFiles = new ArrayList<>(Arrays.asList(MCCodeFiles));
         if (MCCodeFiles.length == 0) {
             this.MCCodeFiles.add(new MCCodeFile());
         }
-        this.ownerId = ownerId;
-        getOwner().getProjects().add(this);
         args = new MCCodeFile("Args");
         input = new MCCodeFile("Input");
     }
@@ -56,7 +53,7 @@ public class CodeProject {
             file.setProject(this);
     }
 
-    private void openProjectMenu(Player player) {
+    protected void openProjectMenu(Player player) {
         getProjectMenu().open(player);
     }
 
@@ -86,14 +83,6 @@ public class CodeProject {
 
     public MCCodeFile getArgs() {
         return args;
-    }
-
-    public CodePlayer getOwner() {
-        return CodePlayer.getCodePlayer(ownerId);
-    }
-
-    public void setOwner(CodePlayer owner) {
-        this.ownerId = owner.getPlayerId();
     }
 
     public String getLanguage() {
@@ -227,27 +216,13 @@ public class CodeProject {
         }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
     }
 
-    public void save() {
-        getOwner().save();
-    }
+    public void save(){}
 
-    public boolean isOwner(Player player) {
-        return player.getUniqueId().equals(getOwner().getPlayerId());
-    }
-
-    public void open(Player player) {
-        if (!isOwner(player)) {
-            player.sendMessage(Message.NOT_PROJECT_OWNER);
-            return;
-        }
+    public void open(Player player){
         openProjectMenu(player);
     }
 
     public void editFile(MCCodeFile file, Player player) {
-        if (!isOwner(player)) {
-            player.sendMessage(Message.NOT_PROJECT_OWNER);
-            return;
-        }
         ItemStack book = new ItemStack(Material.BOOK_AND_QUILL);
         ItemMeta meta = book.getItemMeta();
 
