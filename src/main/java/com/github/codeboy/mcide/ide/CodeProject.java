@@ -1,6 +1,7 @@
 package com.github.codeboy.mcide.ide;
 
 import com.github.codeboy.mcide.Mcide;
+import com.github.codeboy.mcide.Util;
 import com.github.codeboy.mcide.config.Message;
 import com.github.codeboy.mcide.ide.gui.ProjectMenu;
 import com.github.codeboy.piston4j.api.*;
@@ -20,22 +21,65 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class CodeProject {
 
+    private static final HashMap<UUID,CodeProject> codeProjects=new HashMap<>();
+
+    public static CodeProject getCodeProject(UUID id){
+        return codeProjects.get(id);
+    }
+
+    public static CodeProject createCodeProject(UUID id){
+        CodeProject project=getCodeProject(id);
+        if(project==null)
+            project=loadCodeProject(id);
+        if(project==null)
+            project=new CodeProject(id);
+        return project;
+    }
+
+    public static CodeProject loadCodeProject(UUID id){
+        File file=getSaveFile(id);
+        if(!file.exists())
+            return null;
+        String json=Util.readFile(file);
+        CodeProject project=Mcide.gson().fromJson(json,CodeProject.class);
+        project.addToCache();
+        return project;
+    }
+
+    private static File getSaveFile(UUID id){
+        return new File(JavaPlugin.getProvidingPlugin(CodeProject.class).getDataFolder(),"projects"+File.separator+id);
+    }
+
     private final ArrayList<MCCodeFile> MCCodeFiles;
     private final MCCodeFile input;
     private final MCCodeFile args;
+    private final UUID id;
 
     private transient ProjectMenu projectMenu;
 
     private String language;
     private String title;
+
+    public CodeProject(UUID id) {
+        this.id=id;
+        language="java";
+        title="unnamed";
+        MCCodeFiles=new ArrayList<>();
+        input=new MCCodeFile("Args");
+        args=new MCCodeFile("Input");
+        addToCache();
+    }
 
     public CodeProject(String language, String title, MCCodeFile... MCCodeFiles) {
         this.language = language;
@@ -46,6 +90,12 @@ public class CodeProject {
         }
         args = new MCCodeFile("Args");
         input = new MCCodeFile("Input");
+        id=UUID.randomUUID();
+        addToCache();
+    }
+
+    private void addToCache(){
+        codeProjects.put(getId(),this);
     }
 
     public void init() {
@@ -216,7 +266,11 @@ public class CodeProject {
         }.runTaskLater(Mcide.getPlugin(Mcide.class), 0);
     }
 
-    public void save(){}
+    public void save(){
+        File file=getSaveFile(getId());
+        String json=Mcide.gson().toJson(this);
+        Util.writeFile(file,json);
+    }
 
     public void open(Player player){
         openProjectMenu(player);
@@ -326,5 +380,9 @@ public class CodeProject {
             getMCCodeFiles().remove(size - 1);
             getProjectMenu().removeFile();
         }
+    }
+
+    public UUID getId() {
+        return id;
     }
 }
